@@ -46,17 +46,6 @@ jobs:
         with:
           node-version: lts/*
 
-      - name: Read content version
-        id: contentversion
-        shell: pwsh # I was today years old when I found out powershell is cross-platform. And I'm horrified by this fact.
-        run: |
-          $path = 'public/content/manifest.yml'
-          if (-not (Test-Path $path)) { throw "File not found: $path" }
-          $data = Get-Content $path -Raw | ConvertFrom-Yaml
-          $version = $data.versionNumber
-          if (-not $version) { throw "Missing 'versionNumber' in $path" }
-          "version=$version" >> $env:GITHUB_OUTPUT 
-
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
@@ -73,11 +62,23 @@ jobs:
       - name: install frontend dependencies
         run: yarn install # change this to npm, pnpm or bun depending on which one you use.
 
+
+      - name: Read content version
+        id: contentversion
+        shell: pwsh # I was today years old when I found out powershell is cross-platform. And I'm horrified by this fact.
+        run: |
+          $path = 'public/content/manifest.yml'
+          if (-not (Test-Path $path)) { throw "File not found: $path" }
+          $data = Get-Content $path -Raw | ConvertFrom-Yaml
+          $version = $data.versionNumber
+          if (-not $version) { throw "Missing 'versionNumber' in $path" }
+          "version=$version" >> $env:GITHUB_OUTPUT 
+
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: app-v__VERSION__-${{steps.contentversion.version}}c # the action automatically replaces \_\_VERSION\_\_ with the app version.
+          tagName: boatts-v__VERSION__-${{steps.contentversion.version}}c # the action automatically replaces \_\_VERSION\_\_ with the app version.
           releaseName: 'Boatts v__VERSION__-${{steps.contentversion.version}}c'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
