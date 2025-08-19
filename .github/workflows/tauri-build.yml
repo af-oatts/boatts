@@ -38,7 +38,7 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
-      - name: Update submodule
+      - name: update submodule
         run: git submodule update --remote --merge
 
       - name: setup node
@@ -73,6 +73,19 @@ jobs:
           $version = $data.versionNumber
           if (-not $version) { throw "Missing 'versionNumber' in $path" }
           "version=$version" >> $env:GITHUB_OUTPUT 
+
+
+      - name: generate public key
+        id: keygen
+        uses: Task20/keygen/.github/actions/keygen@55ab8443399d0156205e490f8d5ac03ffabf1dc9
+        with:
+          version: ${{steps.contentversion.version}}
+          master-password: ${{secrets.MASTER_PASSWORD}}
+
+      - name: write public key
+        shell: bash
+        run: |
+          echo "${{steps.keygen.outputs.public-key}}" > public/key.pub
 
       - uses: tauri-apps/tauri-action@v0
         env:

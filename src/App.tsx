@@ -4,16 +4,24 @@ import "./App.css";
 
 function App() {
   const [greetMsg, setGreetMsg] = useState("");
+  const [pubKey, setPubKey] = useState("");
 
-  const setup = async () => {
+  const setupGreet = async () => {
     let response = await fetch("/content/hello.txt")
     if(response.ok) {
       setGreetMsg(await response.text())
     }
+  }  
+  const setupPubkey = async () => {
+    let response = await fetch("/key.pub")
+    if(response.ok) {
+      setPubKey(await response.text())
+    }
   }
 
   useEffect(() => {
-    setup();
+    setupGreet();
+    setupPubkey();
   })
 
 
@@ -35,6 +43,7 @@ function App() {
       <p>Click on the Tauri, Vite, and React logos to learn more.</p>
 
       <p>{greetMsg}</p>
+      <p>{pubKey}</p>
     </main>
   );
 }
