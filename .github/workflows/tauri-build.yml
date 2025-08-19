@@ -65,14 +65,20 @@ jobs:
 
       - name: Read content version
         id: contentversion
-        shell: pwsh # I was today years old when I found out powershell is cross-platform. And I'm horrified by this fact.
         run: |
-          $path = 'public/content/manifest.yml'
-          if (-not (Test-Path $path)) { throw "File not found: $path" }
-          $data = Get-Content $path -Raw | ConvertFrom-Yaml
-          $version = $data.versionNumber
-          if (-not $version) { throw "Missing 'versionNumber' in $path" }
-          "version=$version" >> $env:GITHUB_OUTPUT 
+          VERSION="$(python - <<'PY'
+          import sys, yaml, pathlib
+          p = pathlib.Path("public/content/manifest.yml")
+          with p.open("r", encoding="utf-8") as f:
+              data = yaml.safe_load(f)
+          v = data.get("versionNumber")
+          if not v:
+              raise SystemExit("versionNumber not found in manifest")
+          print(v)
+          PY
+          )"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+        shell: bash
 
 
       - name: generate public key
