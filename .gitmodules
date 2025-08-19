@@ -1,0 +1,3 @@
+[submodule "public/content"]
+	path = public/content
+	url = https://github.com/Task20/boatts-content
