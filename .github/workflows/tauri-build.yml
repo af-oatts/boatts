@@ -66,22 +66,7 @@ jobs:
       - name: Read content version
         id: contentversion
         run: |
-          VERSION="$(python -c '
-          import sys, pathlib, subprocess
-          try:
-              import yaml
-          except ImportError:
-              subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", "pyyaml"])
-              import yaml
-          p = pathlib.Path("public/content/manifest.yml")
-          with p.open("r", encoding="utf-8") as f:
-              data = yaml.safe_load(f)
-          v = data.get("versionNumber")
-          if not v:
-              raise SystemExit("versionNumber not found in manifest")
-          print(v)
-          '
-          )"
+          VERSION="$(yq 'versionNumber' public/content/manifest.yml)"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
         shell: bash
 
