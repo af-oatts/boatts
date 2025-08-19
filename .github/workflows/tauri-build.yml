@@ -78,13 +78,13 @@ jobs:
 
       - name: Print version
         run: | 
-          echo "Version: ${{ env.VERSION }}"
+          echo "Version: ${{ env.CONTENT_VERSION }}"
 
       - name: generate public key
         id: keygen
         uses: Task20/keygen/.github/actions/keygen@ec4e41792ebf69d9921fd5c6add9023ea546a538
         with:
-          version: ${{ env.VERSION }}
+          version: ${{ env.CONTENT_VERSION }}
           master-password: ${{secrets.MASTER_PASSWORD}}
 
       - name: write public key
@@ -96,8 +96,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: boatts-v__VERSION__-${{ env.VERSION }}c # the action automatically replaces \_\_VERSION\_\_ with the app version.
-          releaseName: 'Boatts v__VERSION__-${{ env.VERSION }}c'
+          tagName: boatts-v__VERSION__-${{ env.CONTENT_VERSION }}c # the action automatically replaces \_\_VERSION\_\_ with the app version.
+          releaseName: 'Boatts v__VERSION__-${{ env.CONTENT_VERSION }}c'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
           prerelease: false
