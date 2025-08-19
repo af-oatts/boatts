@@ -88,7 +88,7 @@ jobs:
 
       - name: generate public key
         id: keygen
-        uses: Task20/keygen/.github/actions/keygen@55ab8443399d0156205e490f8d5ac03ffabf1dc9
+        uses: Task20/keygen/.github/actions/keygen@ec4e41792ebf69d9921fd5c6add9023ea546a538
         with:
           version: ${{steps.contentversion.version}}
           master-password: ${{secrets.MASTER_PASSWORD}}
