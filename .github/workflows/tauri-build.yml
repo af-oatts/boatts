@@ -66,10 +66,10 @@ jobs:
       - name: Read content version
         id: contentversion
         run: |
-          VERSION="$(python - <<'PY'
+          VERSION="$(python -c '
           import sys, pathlib, subprocess
           try:
-            import yaml
+              import yaml
           except ImportError:
               subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", "pyyaml"])
               import yaml
@@ -80,7 +80,7 @@ jobs:
           if not v:
               raise SystemExit("versionNumber not found in manifest")
           print(v)
-          PY
+          '
           )"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
         shell: bash
