@@ -104,9 +104,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: boatts-v${{ env.VERSION }} # the action automatically replaces \_\_VERSION\_\_ with the app version.
-          releaseName: 'Boatts v${{ env.VERSION }}'
-          releaseBody: 'See the assets to download this version and install.'
-          releaseDraft: true
+          releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
+      - name: Ls dir 
+        if: runner.os == 'macOS'
+        run: |
+          ls -R ./src-tauri/target
